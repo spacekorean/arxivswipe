@@ -1,0 +1,50 @@
+name: Update papers & deploy
+
+on:
+  schedule:
+    # 3시간마다 수집 (GitHub 서버에서 실행되므로 내 PC는 꺼져 있어도 된다)
+    - cron: '0 */3 * * *'
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Fetch latest arXiv papers
+        run: python scripts/fetch_papers.py
+
+      - name: Commit refreshed data
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/papers.json
+          if git diff --staged --quiet; then
+            echo "변경 없음"
+          else
+            git commit -m "chore: refresh arXiv papers ($(date -u +%Y-%m-%d))"
+            git push
+          fi
+
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: .
+      - id: deployment
+        uses: actions/deploy-pages@v4

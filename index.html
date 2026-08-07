@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1">
+<meta name="theme-color" content="#08080c">
+<title>arXiv Swipe · 오늘의 논문</title>
+<meta name="description" content="arXiv 신착 논문을 SNS처럼 위아래로 넘겨보는 모바일 피드">
+<meta property="og:title" content="arXiv Swipe">
+<meta property="og:description" content="arXiv 신착 논문을 SNS처럼 넘겨보세요">
+<meta property="og:type" content="website">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📄</text></svg>">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<div class="progress"><div class="progress__bar" id="progressBar"></div></div>
+
+<header class="topbar" id="topbar">
+  <div class="topbar__row">
+    <h1 class="brand"><span class="brand__mark">a</span>rXiv&nbsp;Swipe</h1>
+    <div class="visits" id="visits" hidden title="방문자 수">
+      <span class="visits__item">오늘 <b id="visitDay">–</b></span>
+      <span class="visits__dot">·</span>
+      <span class="visits__item">전체 <b id="visitTotal">–</b></span>
+    </div>
+    <div class="topbar__right">
+      <button class="iconbtn" id="refreshBtn" title="최신 논문 새로고침" aria-label="새로고침">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 11a8 8 0 1 0-.6 4M20 5v6h-6"/></svg>
+      </button>
+      <button class="iconbtn" id="aboutBtn" title="정보" aria-label="정보">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 7.6v.1"/></svg>
+      </button>
+    </div>
+  </div>
+  <nav class="tabs" id="tabs" aria-label="카테고리"></nav>
+</header>
+
+<main class="feed" id="feed" tabindex="-1"></main>
+
+<div class="hint" id="hint" hidden>
+  <div class="hint__box">
+    <div class="hint__arrow">︿</div>
+    <p>위로 쓸어올려 다음 논문</p>
+    <p class="hint__sub">더블탭으로 저장 · 카드를 탭하면 초록 전체</p>
+  </div>
+</div>
+
+<div class="toast" id="toast" hidden></div>
+
+<div class="sheet" id="sheet" hidden>
+  <div class="sheet__panel">
+    <h2>arXiv Swipe</h2>
+    <p>arXiv에 새로 올라온 논문을 SNS 피드처럼 위아래로 넘겨보는 샘플입니다.</p>
+    <ul>
+      <li><b>위/아래 스와이프</b> — 다음·이전 논문 (데스크톱은 ↑↓ 방향키)</li>
+      <li><b>더블탭</b> — 저장 / 저장 해제</li>
+      <li><b>카드 탭</b> — 초록 펼치기·접기</li>
+      <li><b>상단 탭</b> — 분야 전환, ★ 는 저장한 논문</li>
+    </ul>
+    <p class="sheet__meta" id="sheetMeta"></p>
+    <p class="sheet__note">GitHub Actions가 3시간마다 arXiv API에서 신착 논문을 수집해 정적 JSON으로 저장합니다. 내 컴퓨터가 켜져 있을 필요는 없습니다. 상단 새로고침 버튼은 그 최신 JSON을 다시 받아옵니다.</p>
+    <button class="btn btn--primary" id="sheetClose">닫기</button>
+  </div>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>

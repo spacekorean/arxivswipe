@@ -1,0 +1,14 @@
+{
+  "name": "arXiv Swipe",
+  "short_name": "arXiv Swipe",
+  "description": "arXiv 신착 논문을 SNS처럼 넘겨보는 모바일 피드",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#08080c",
+  "theme_color": "#08080c",
+  "icons": [
+    { "src": "icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
+  ]
+}
