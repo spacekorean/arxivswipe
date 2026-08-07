@@ -34,7 +34,13 @@
       </button>
     </div>
   </div>
-  <nav class="tabs" id="tabs" aria-label="카테고리"></nav>
+  <div class="tabsrow" id="tabsrow">
+    <nav class="tabs" id="tabs" aria-label="카테고리"></nav>
+    <button class="tab tab--saved" id="savedTab" data-cat="saved" role="tab"
+            aria-selected="false" title="저장한 논문">
+      ★<span class="tab__n" id="savedCount">0</span>
+    </button>
+  </div>
 </header>
 
 <main class="feed" id="feed" tabindex="-1"></main>
@@ -57,7 +63,8 @@
       <li><b>위/아래 스와이프</b> — 다음·이전 논문 (데스크톱은 ↑↓ 방향키)</li>
       <li><b>더블탭</b> — 저장 / 저장 해제</li>
       <li><b>카드 탭</b> — 초록 펼치기·접기</li>
-      <li><b>상단 탭</b> — 분야 전환, ★ 는 저장한 논문</li>
+      <li><b>상단 탭</b> — 좌우로 밀어 분야 전환</li>
+      <li><b>오른쪽 끝 ★ 버튼</b> — 저장한 논문 모아보기 (항상 고정)</li>
     </ul>
     <p class="sheet__meta" id="sheetMeta"></p>
     <p class="sheet__note">GitHub Actions가 3시간마다 arXiv API에서 신착 논문을 수집해 정적 JSON으로 저장합니다. 내 컴퓨터가 켜져 있을 필요는 없습니다. 상단 새로고침 버튼은 그 최신 JSON을 다시 받아옵니다.</p>

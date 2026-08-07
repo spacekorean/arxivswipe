@@ -98,14 +98,33 @@ svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width:
 .iconbtn.is-busy svg { animation: spin .9s linear infinite; }
 @keyframes spin { to { transform: rotate(360deg); } }
 
-/* 카테고리 탭 */
-.tabs {
-  display: flex; gap: 7px;
+/* 카테고리 탭 — 분야는 가로 스크롤, 저장 탭은 오른쪽에 고정 */
+.tabsrow {
+  display: flex; align-items: center; gap: 8px;
   padding: 0 16px 2px;
+}
+.tabs {
+  flex: 1; min-width: 0;
+  display: flex; gap: 7px;
+  padding-bottom: 2px;
   overflow-x: auto;
   scrollbar-width: none;
+  /* 오른쪽 페이드로 '더 있다'는 신호를 준다 */
+  -webkit-mask-image: linear-gradient(90deg, #000 calc(100% - 26px), transparent);
+          mask-image: linear-gradient(90deg, #000 calc(100% - 26px), transparent);
+}
+.tabs.is-end {
+  -webkit-mask-image: none;
+          mask-image: none;
 }
 .tabs::-webkit-scrollbar { display: none; }
+
+.tab--saved {
+  flex: 0 0 auto;
+  padding-inline: 11px;
+  font-size: 12.5px;
+}
+.tab--saved .tab__n { margin-left: 4px; }
 
 .tab {
   flex: 0 0 auto;

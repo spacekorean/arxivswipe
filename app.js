@@ -21,6 +21,8 @@
   const $ = (sel) => document.querySelector(sel);
   const feedEl = $('#feed');
   const tabsEl = $('#tabs');
+  const tabsRowEl = $('#tabsrow');
+  const savedTabEl = $('#savedTab');
   const barEl = $('#progressBar');
   const hintEl = $('#hint');
   const toastEl = $('#toast');
@@ -98,7 +100,6 @@
 
   /* ─────────── 렌더링 ─────────── */
   function renderTabs() {
-    const savedCount = Object.keys(saved).length;
     const tabs = [
       { id: 'all', label: '전체', n: DATA.papers.length },
       ...DATA.categories.map((c) => ({
@@ -106,7 +107,6 @@
         label: c.ko,
         n: DATA.papers.filter((p) => p.cats.includes(c.id)).length,
       })),
-      { id: 'saved', label: '★ 저장', n: savedCount },
     ];
 
     tabsEl.innerHTML = tabs.map((t) => `
@@ -114,7 +114,20 @@
               aria-selected="${t.id === activeCat}">
         ${esc(t.label)}<span class="tab__n">${t.n}</span>
       </button>`).join('');
+
+    // 저장 탭은 스크롤 밖으로 밀려나지 않도록 따로 고정해 둔다
+    savedTabEl.setAttribute('aria-selected', String(activeCat === 'saved'));
+    $('#savedCount').textContent = Object.keys(saved).length;
+    markTabsEnd();
   }
+
+  // 가로로 더 볼 게 남았을 때만 오른쪽 페이드를 유지한다
+  function markTabsEnd() {
+    const atEnd = tabsEl.scrollLeft + tabsEl.clientWidth >= tabsEl.scrollWidth - 2;
+    tabsEl.classList.toggle('is-end', atEnd);
+  }
+  tabsEl.addEventListener('scroll', markTabsEnd, { passive: true });
+  addEventListener('resize', markTabsEnd);
 
   function papersFor(cat) {
     if (cat === 'saved') {
@@ -293,13 +306,15 @@
   }
 
   /* ─────────── 이벤트 ─────────── */
-  tabsEl.addEventListener('click', (e) => {
+  tabsRowEl.addEventListener('click', (e) => {
     const tab = e.target.closest('.tab');
     if (!tab) return;
     activeCat = tab.dataset.cat;
     renderTabs();
     render();
-    tab.scrollIntoView({ inline: 'center', block: 'nearest', behavior: 'smooth' });
+    if (tab !== savedTabEl) {
+      tab.scrollIntoView({ inline: 'center', block: 'nearest', behavior: 'smooth' });
+    }
   });
 
   let lastTap = 0;
