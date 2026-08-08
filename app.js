@@ -11,12 +11,31 @@
   const COUNTER_NS = 'arxiv-swipe-spacekorean';
   const VISIT_KEY = 'arxiv-swipe:counted';
 
-  // 카테고리별 색상(HSL 색상각). 목록에 없으면 기본값.
+  // 분야별 색상(HSL 색상각). 세부 카테고리가 없으면 아카이브 단위로 떨어진다.
   const HUE = {
     'cs.AI': 265, 'cs.CL': 152, 'cs.CV': 328, 'cs.LG': 214,
-    'cs.RO': 24, 'cs.CR': 352, 'cs.HC': 190, 'stat.ML': 42,
+    'cs.RO': 24, 'cs.CR': 352, 'cs.HC': 190,
+    'astro-ph': 232, 'quant-ph': 288, 'gr-qc': 205, 'cond-mat': 168,
+    'hep-th': 305, 'hep-ph': 312, 'hep-ex': 318, 'hep-lat': 298,
+    'nucl-th': 8, 'nucl-ex': 14,
+    physics: 45, math: 250, 'math-ph': 244, 'q-bio': 118,
+    'q-fin': 88, econ: 72, eess: 196, stat: 42, cs: 260,
   };
-  const hueOf = (cat) => HUE[cat] ?? 250;
+
+  function hueOf(cat) {
+    if (!cat) return 250;
+    if (HUE[cat] != null) return HUE[cat];
+    return HUE[cat.split('.')[0]] ?? 250;
+  }
+
+  // 논문이 어떤 주제에 속하는지는 접두사로 판정한다.
+  // (astro-ph.GA 는 astro-ph 주제에, stat.ML 은 stat 과 cs.LG 주제 양쪽에 걸린다)
+  function inTopic(paper, topic) {
+    return paper.cats.some((c) =>
+      topic.match.some((m) => c === m || c.startsWith(`${m}.`)));
+  }
+
+  const topicById = (id) => DATA.categories.find((t) => t.id === id);
 
   const $ = (sel) => document.querySelector(sel);
   const feedEl = $('#feed');
@@ -83,9 +102,10 @@
     return `${authors.slice(0, 3).join(' · ')} 외 ${authors.length - 3}명`;
   }
 
-  function labelOf(cat) {
-    const hit = DATA.categories.find((c) => c.id === cat);
-    return hit ? hit.label : cat;
+  // 카드 배경에 깔리는 글리프용 짧은 라벨
+  function labelOf(primary) {
+    const hit = DATA.categories.find((t) => inTopic({ cats: [primary] }, t));
+    return hit ? hit.label : primary.split('.')[0];
   }
 
   let toastTimer;
@@ -102,10 +122,10 @@
   function renderTabs() {
     const tabs = [
       { id: 'all', label: '전체', n: DATA.papers.length },
-      ...DATA.categories.map((c) => ({
-        id: c.id,
-        label: c.ko,
-        n: DATA.papers.filter((p) => p.cats.includes(c.id)).length,
+      ...DATA.categories.map((t) => ({
+        id: t.id,
+        label: t.ko,
+        n: DATA.papers.filter((p) => inTopic(p, t)).length,
       })),
     ];
 
@@ -134,7 +154,8 @@
       return Object.values(saved).sort((a, b) => (b.savedAt || 0) - (a.savedAt || 0));
     }
     if (cat === 'all') return DATA.papers;
-    return DATA.papers.filter((p) => p.cats.includes(cat));
+    const topic = topicById(cat);
+    return topic ? DATA.papers.filter((p) => inTopic(p, topic)) : DATA.papers;
   }
 
   function cardHTML(p) {

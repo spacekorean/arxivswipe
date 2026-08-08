@@ -30,6 +30,10 @@ GitHub Actions (3시간마다)
 
 분야별로 배경 색상각이 달라져서 스크롤만 해도 어떤 분야인지 감이 옵니다. 제목·초록의 LaTeX 마크업(`$\omega$` 등)은 렌더링 전에 벗겨냅니다.
 
+주제는 19개 — 인공지능 · 천체·우주 · 양자물리 · 자연어처리 · 컴퓨터비전 · 머신러닝 · 고에너지 · 응집물질 · 광학·응용물리 · 로보틱스 · 수학 · 중력·상대성 · 핵물리 · 생명·의학 · 신호·전자 · 통계 · 경제·금융 · 보안·암호 · HCI.
+
+**주의** — `astro-ph`, `cond-mat`, `physics`, `math`처럼 하위로 쪼개진 아카이브는 이름만으로 질의하면 2007년 이전 논문만 잡힙니다(`cat:astro-ph`는 실측 결과 최신 논문 0건). 반드시 하위 카테고리를 나열해 OR로 묶어야 합니다. 반대로 `quant-ph`, `hep-th`, `gr-qc`처럼 쪼개지지 않은 아카이브는 이름만으로 정상 동작합니다. 논문을 주제로 분류할 때는 접두사 매칭(`match`)을 쓰므로 `astro-ph.GA`도 천체·우주에 잡힙니다.
+
 ## 파일
 
 ```
@@ -55,8 +59,8 @@ python3 scripts/fetch_papers.py
 
 ## 설정
 
-- **분야 추가/변경** — `scripts/fetch_papers.py`의 `CATEGORIES`, 색상은 `app.js`의 `HUE`
-- **분야당 수집 편수** — 환경변수 `PER_CATEGORY` (기본 40)
+- **주제 추가/변경** — `scripts/fetch_papers.py`의 `TOPICS`, 색상은 `app.js`의 `HUE`
+- **주제당 수집 편수** — 환경변수 `PER_CATEGORY` (기본 30)
 - **수집 주기** — `.github/workflows/update.yml`의 `cron`
 - **방문자 카운터** — `app.js`의 `COUNTER_NS`. [abacus](https://abacus.jasoncameron.dev) 공개 API를 쓰며, 네임스페이스가 전역 공용이라 포크한다면 값을 바꾸세요. 카운터가 죽으면 배지는 조용히 숨습니다.
 
